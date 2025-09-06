@@ -1,7 +1,7 @@
 import time
 
 _cache = {}
-TTL = 60 * 5  # 5 minutos
+TTL = 7200
 
 def get(key: str):
     entry = _cache.get(key)
