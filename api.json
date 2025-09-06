@@ -1,0 +1,177 @@
+{
+    "message": "Recomendações de óleo obtidas com sucesso",
+    "meta": {},
+    "data": {
+        "vehicle": {
+            "brand": "FORD",
+            "model": "RANGER",
+            "submodel": "RANGER",
+            "engine": "2.2",
+            "year": 2019,
+            "year_start": 2019,
+            "year_end": 2019,
+            "fuel_type": "DIESEL",
+            "capacity": 8.0,
+            "vehicle_type": "PESADO",
+            "raw_data": {
+                "MARCA": "FORD",
+                "MODELO": "RANGER XLSCD2A22",
+                "SUBMODELO": "RANGER",
+                "VERSAO": "XLSCD2A22",
+                "ano": "2019",
+                "anoModelo": "2020",
+                "chassi": "*****45160",
+                "codigoRetorno": 200,
+                "codigoSituacao": "0",
+                "cor": "VERMELHA",
+                "data": "05/03/2025 15:29:58",
+                "extra": {
+                    "ano_fabricacao": "2019",
+                    "ano_modelo": "2020",
+                    "caixa_cambio": "",
+                    "cap_maxima_tracao": "595",
+                    "carroceria": "",
+                    "chassi": "8AFAR22N2LJ145160",
+                    "cilindradas": "2198",
+                    "combustivel": "Diesel",
+                    "di": "1907485599",
+                    "eixo_traseiro_dif": "",
+                    "eixos": "2",
+                    "especie": "Especial",
+                    "faturado": "03470727001607",
+                    "grupo": "RANGER",
+                    "limite_restricao_trib": "",
+                    "linha": "99349932",
+                    "media_preco": "9999.0",
+                    "modelo": "I/FORD REANGER XLSCD2A22",
+                    "motor": "QJ2ULJ145160",
+                    "municipio": "CAMACARI",
+                    "nacionalidade": "Importado",
+                    "peso_bruto_total": "320",
+                    "placa": "PLQ8F28",
+                    "placa_modelo_antigo": "PLQ8528",
+                    "placa_modelo_novo": "PLQ8F28",
+                    "quantidade_passageiro": "5",
+                    "registro_di": "",
+                    "renavam": "",
+                    "restricao_1": "SEM RESTRICAO",
+                    "restricao_2": "SEM RESTRICAO",
+                    "restricao_3": "SEM RESTRICAO",
+                    "restricao_4": "SEM RESTRICAO",
+                    "s.especie": "Especial",
+                    "segmento": "Comercial Leve",
+                    "situacao_chassi": "N",
+                    "situacao_veiculo": "S",
+                    "sub_segmento": "CL - PICK-UP GRANDE",
+                    "terceiro_eixo": "",
+                    "tipo_carroceria": "ABERTA/CABINE DUPLA",
+                    "tipo_doc_faturado": "Juridica",
+                    "tipo_doc_importadora": "Outros",
+                    "tipo_doc_prop": "Juridica",
+                    "tipo_montagem": "1",
+                    "tipo_veiculo": "Caminhonete",
+                    "uf": "BA",
+                    "uf_faturado": "BA",
+                    "uf_placa": "BA",
+                    "unidade_local_srf": "1010500"
+                },
+                "fipe": {
+                    "dados": [
+                        {
+                            "codigo_fipe": "003364-2",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "10741",
+                            "score": 48,
+                            "texto_modelo": "Ranger Limited 3.2 4x4 CD Diesel Aut."
+                        },
+                        {
+                            "codigo_fipe": "003476-2",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "9080",
+                            "score": 48,
+                            "texto_modelo": "Ranger Storm 3.2 20V 4x4 CD Diesel Aut."
+                        },
+                        {
+                            "codigo_fipe": "003393-6",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "6528",
+                            "score": 48,
+                            "texto_modelo": "Ranger TROPIVAN 3.2 20V 4X4 TB Dies.Aut."
+                        },
+                        {
+                            "codigo_fipe": "003426-6",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "7688",
+                            "score": 59,
+                            "texto_modelo": "Ranger XL 2.2 4x4 CD Diesel Mec."
+                        },
+                        {
+                            "codigo_fipe": "003433-9",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "7882",
+                            "score": 59,
+                            "texto_modelo": "Ranger XL 2.2 4x4 CS Diesel Mec."
+                        },
+                        {
+                            "codigo_fipe": "003454-1",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "8316",
+                            "score": 69,
+                            "texto_modelo": "Ranger XLS 2.2 4x2 CD Diesel Aut."
+                        },
+                        {
+                            "codigo_fipe": "003421-5",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "7590",
+                            "score": 64,
+                            "texto_modelo": "Ranger XLS 2.2 4x4 CD Diesel Aut."
+                        },
+                        {
+                            "codigo_fipe": "003405-3",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "6693",
+                            "score": 64,
+                            "texto_modelo": "Ranger XLS 2.2 4x4 CD Diesel Mec."
+                        },
+                        {
+                            "codigo_fipe": "003363-4",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "6171",
+                            "score": 59,
+                            "texto_modelo": "Ranger XLT 3.2 20V 4x4 CD Diesel Aut."
+                        },
+                        {
+                            "codigo_fipe": "003394-4",
+                            "codigo_marca": 22,
+                            "codigo_modelo": "6527",
+                            "score": 43,
+                            "texto_modelo": "Ranger TROPIVAN 2.5 16V 4X2 Flex"
+                        }
+                    ]
+                },
+                "listamodelo": [
+                    "RANGER",
+                    "XLSCD2A22"
+                ],
+                "logo": "https://apiplacas.com.br/logos/logosMarcas/ford.png",
+                "marca": "FORD",
+                "marcaModelo": "FORD/RANGER XLSCD2A22",
+                "mensagemRetorno": "Sem erros.",
+                "modelo": "RANGER XLSCD2A22",
+                "municipio": "Piraquara",
+                "origem": "IMPORTADO",
+                "placa": "PLQ8F28",
+                "placa_alternativa": "PLQ8528",
+                "segmento": null,
+                "situacao": "Sem restrição",
+                "sub_segmento": null,
+                "token": "",
+                "uf": "PR"
+            }
+        },
+        "recommendation": {
+            "types": "Nossa base de dados são de veículos de 2013 - 2023. Por favor, consulte o manual do proprietário para avaliar o lubricante recomendado.",
+            "details": []
+        }
+    }
+}

@@ -7,4 +7,4 @@ def fetch_vehicle_data(plate: str):
     headers = {"Content-Type": "application/json"}
     response = requests.post(URL, json=payload, headers=headers, timeout=5)
     response.raise_for_status()
-    return response.json()
+    return response.json() #aqui ela vai me retornar todos os dados da api que estamos consultando 

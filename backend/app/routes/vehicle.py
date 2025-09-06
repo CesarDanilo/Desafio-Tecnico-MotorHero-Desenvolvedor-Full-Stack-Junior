@@ -36,7 +36,7 @@ def consult_vehicle(data: VehicleConsultRequest):
         api_response = valvoline.fetch_vehicle_data(plate)
 
         # 4 - Calcular frascos
-        enriched_data = bottle_calculator.process(api_response)
+        enriched_data = bottle_calculator.calculate_bottles(api_response)
 
         # 5 - Salvar no cache
         cache.set(plate, enriched_data)
