@@ -1,23 +1,51 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from app.models import VehicleConsultRequest
+from app.services import valvoline, cache, bottle_calculator
+from app.utils import plate_utils
 
 router = APIRouter()
 
-
-@router.post("/vehicle/consult/{plate}")
-def normalize_plate(plate: str) -> str:
+@router.post("/consult")
+def consult_vehicle(data: VehicleConsultRequest):
     """
-    Recebe: "ESS-4H19", "ess4h19", "ESS 4 H 19"
-    Retorna: "ESS4H19"
-
-    Também detecta se é formato antigo (ABC1234) ou Mercosul (ABC1D23)
+    Consulta informações de óleo do veículo a partir da placa.
+    Fluxo:
+      1. Normaliza e valida placa
+      2. Consulta cache
+      3. Se não tiver → consulta API da Valvoline
+      4. Calcula frascos
+      5. Retorna resultado
     """
-    # Remove caracteres especiais e espaços
-    normalized = plate.upper().replace("-", "").replace(" ", "")
 
-    # Valida formato
-    if len(normalized) == 7:
-        # Verifica se é formato válido
-        if normalized[:3].isalpha() and normalized[3].isdigit():
-            return normalized
+    # 1 - Normalizar e validar placa
+    plate = plate_utils.normalize_plate(data.plate)
+    if not plate_utils.is_valid_plate(plate):
+        raise HTTPException(status_code=400, detail="Placa inválida")
 
-    raise ValueError("Formato de placa inválido")
+    # 2 - Tentar buscar no cache
+    cached_data = cache.get(plate)
+    if cached_data:
+        return {
+            "source": "cache",
+            "plate": plate,
+            "data": cached_data
+        }
+
+    try:
+        # 3 - Consultar API da Valvoline
+        api_response = valvoline.fetch_vehicle_data(plate)
+
+        # 4 - Calcular frascos
+        enriched_data = bottle_calculator.process(api_response)
+
+        # 5 - Salvar no cache
+        cache.set(plate, enriched_data)
+
+        return {
+            "source": "valvoline_api",
+            "plate": plate,
+            "data": enriched_data
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro na consulta: {str(e)}")
