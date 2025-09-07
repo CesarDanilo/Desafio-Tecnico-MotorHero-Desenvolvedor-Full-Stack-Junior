@@ -3,7 +3,17 @@ import math
 
 def calculate_bottles(api_response):
     """
-    LÓGICA DE CÁLCULO DE FRASCOS - Versão segura
+    LÓGICA DE CÁLCULO DE FRASCOS
+
+    A API retorna:
+    - vehicle.capacity = 4.0 (litros)
+    - oil_volume = "946 mL | 200L"
+
+    Processo:
+    1. Converter capacidade para ML: 4.0L = 4000ml
+    2. Extrair tamanho do frasco: "946 mL | 200L" → 946ml
+    3. Calcular frascos: ceil(4000 / 946) = 5 frascos
+    4. Calcular sobra: (5 * 946) - 4000 = 730ml
     """
 
     # 1. Extrair dados de forma segura usando .get()
