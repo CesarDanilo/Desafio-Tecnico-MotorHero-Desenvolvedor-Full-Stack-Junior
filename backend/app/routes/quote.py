@@ -10,6 +10,25 @@ import random
 router = APIRouter()
 
 
+@router.get("/quotes", response_model=list[Quote])
+def get_quotes():
+    try:
+        with Session(engine) as session:
+            statement = select(Quote)
+            results = session.exec(statement).all()
+
+            if not results:
+                raise HTTPException(
+                    status_code=404, detail="Nenhuma consulta encontrada"
+                )
+
+        return results
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erro ao buscar consultas: {str(e)}"
+        )
+
+
 @router.post("/create")
 def create_quote(quote_request: QuoteRequest):
     """
