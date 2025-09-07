@@ -8,7 +8,7 @@ class VehicleConsultRequest(BaseModel):
 
 
 class QuoteItem(BaseModel):
-    type: Literal["oil", "service", "part"]  # restringe tipos válidos
+    type: Literal["oil", "service", "part"]  
     code: Optional[str] = None
     description: str
     quantity: int
