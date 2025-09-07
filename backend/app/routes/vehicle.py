@@ -5,7 +5,6 @@ from app.utils import plate_utils
 
 router = APIRouter()
 
-
 @router.post("/consult")
 def consult_vehicle(data: VehicleConsultRequest):
     """
@@ -42,9 +41,10 @@ def consult_vehicle(data: VehicleConsultRequest):
         vehicle_detail = extract_essential_data.extract_data(api_response)
 
         # 5 - Salvar no cache
-        cache.set(
-            plate, {"vehicle_detail": vehicle_detail, "enriched_data": enriched_data}
-        )
+        cache.set(plate, {
+            "vehicle_detail": vehicle_detail,
+            "enriched_data": enriched_data
+        })
 
         return {
             "source": "valvoline_api",
