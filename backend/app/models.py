@@ -1,30 +1,75 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from enum import Enum
 from pydantic import BaseModel
+import json
 
-class VehicleConsultRequest(BaseModel):
-    plate: str
-    mechanic_id: str
 
-# Enum para tipos
+# -----------------------
+# Enums
+# -----------------------
 class ItemType(str, Enum):
     oil = "oil"
     service = "service"
     part = "part"
 
+
 class DiscountType(str, Enum):
     percentage = "percentage"
     fixed = "fixed"
 
-# Cliente
+
+# -----------------------
+# Pydantic Models
+# -----------------------
+class VehicleConsultRequest(BaseModel):
+    plate: str
+    mechanic_id: str
+
+
+class ConsultResponse(BaseModel):
+    source: str
+    plate: str
+    data: Dict[str, Any]
+    enriched_data: Dict[str, Any]
+
+
+class CustomerRequest(BaseModel):
+    name: str
+    phone: str
+
+
+class QuoteItemRequest(BaseModel):
+    type: ItemType
+    code: Optional[str] = None
+    description: str
+    quantity: int
+    unit_price: float
+
+
+class DiscountRequest(BaseModel):
+    type: DiscountType
+    value: float
+
+
+class QuoteRequest(BaseModel):
+    vehicle_plate: str
+    vehicle_description: Optional[str] = None
+    customer: CustomerRequest
+    items: List[QuoteItemRequest]
+    discount: Optional[DiscountRequest] = None
+
+
+# -----------------------
+# SQLModel Models
+# -----------------------
 class Customer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     phone: str
     quotes: List["Quote"] = Relationship(back_populates="customer")
 
-# Orçamento
+
 class Quote(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     vehicle_plate: str
@@ -34,7 +79,7 @@ class Quote(SQLModel, table=True):
     customer: Optional[Customer] = Relationship(back_populates="quotes")
     items: List["QuoteItem"] = Relationship(back_populates="quote")
 
-# Itens do orçamento
+
 class QuoteItem(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     type: ItemType
@@ -46,23 +91,20 @@ class QuoteItem(SQLModel, table=True):
     quote: Optional[Quote] = Relationship(back_populates="items")
 
 
-class CustomerRequest(BaseModel):
-    name: str
-    phone: str
+class VehicleConsultHistory(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    plate: str
+    vehicle_data_json: str
+    enriched_data_json: str
 
-class QuoteItemRequest(BaseModel):
-    type: ItemType
-    code: Optional[str] = None
-    description: str
-    quantity: int
-    unit_price: float
+    def set_vehicle_data(self, data: Dict[str, Any]):
+        self.vehicle_data_json = json.dumps(data)
 
-class DiscountRequest(BaseModel):
-    type: DiscountType
-    value: float
+    def get_vehicle_data(self) -> Dict[str, Any]:
+        return json.loads(self.vehicle_data_json)
 
-class QuoteRequest(BaseModel):
-    vehicle_plate: str
-    customer: CustomerRequest
-    items: List[QuoteItemRequest]
-    discount: Optional[DiscountRequest] = None
+    def set_enriched_data(self, data: Dict[str, Any]):
+        self.enriched_data_json = json.dumps(data)
+
+    def get_enriched_data(self) -> Dict[str, Any]:
+        return json.loads(self.enriched_data_json)

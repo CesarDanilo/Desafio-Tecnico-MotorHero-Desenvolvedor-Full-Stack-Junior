@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException
-from app.models import VehicleConsultRequest
+from sqlmodel import Session
+from app.models import VehicleConsultRequest, ConsultResponse, VehicleConsultHistory
 from app.services import valvoline, cache, bottle_calculator, extract_essential_data
+from app.database import engine
 from app.utils import plate_utils
 
 router = APIRouter()
 
-@router.post("/consult")
+
+@router.post("/consult", response_model=ConsultResponse)
 def consult_vehicle(data: VehicleConsultRequest):
     """
     Consulta informações de óleo do veículo a partir da placa.
@@ -14,9 +17,8 @@ def consult_vehicle(data: VehicleConsultRequest):
       2. Consulta cache
       3. Se não tiver → consulta API da Valvoline
       4. Calcula frascos
-      5. Retorna resultado
+      5. Salva histórico e retorna resultado
     """
-
     # 1 - Normalizar e validar placa
     plate = plate_utils.normalize_plate(data.plate)
     if not plate_utils.is_valid_plate(plate):
@@ -25,12 +27,12 @@ def consult_vehicle(data: VehicleConsultRequest):
     # 2 - Buscar no cache
     cached = cache.get(plate)
     if cached:
-        return {
-            "source": "cache",
-            "plate": plate,
-            "data": cached.get("vehicle_detail"),
-            "enriched_data": cached.get("enriched_data"),
-        }
+        return ConsultResponse(
+            source="cache",
+            plate=plate,
+            data=cached.get("vehicle_detail"),
+            enriched_data=cached.get("enriched_data"),
+        )
 
     try:
         # 3 - Consultar API da Valvoline
@@ -41,17 +43,25 @@ def consult_vehicle(data: VehicleConsultRequest):
         vehicle_detail = extract_essential_data.extract_data(api_response)
 
         # 5 - Salvar no cache
-        cache.set(plate, {
-            "vehicle_detail": vehicle_detail,
-            "enriched_data": enriched_data
-        })
+        cache.set(
+            plate, {"vehicle_detail": vehicle_detail, "enriched_data": enriched_data}
+        )
 
-        return {
-            "source": "valvoline_api",
-            "plate": plate,
-            "data": vehicle_detail,
-            "enriched_data": enriched_data,
-        }
+        # 6 - Salvar histórico no banco de dados
+        with Session(engine) as session:
+            history = VehicleConsultHistory(plate=plate)
+            history.set_vehicle_data(vehicle_detail)
+            history.set_enriched_data(enriched_data)
+            session.add(history)
+            session.commit()
+
+        # 7 - Retorno
+        return ConsultResponse(
+            source="valvoline_api",
+            plate=plate,
+            data=vehicle_detail,
+            enriched_data=enriched_data,
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro na consulta: {str(e)}")
