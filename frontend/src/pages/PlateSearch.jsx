@@ -1,6 +1,7 @@
 import { InputPlateSearch } from "../components/Input/Input-PlateSearch";
 import { ButtonSubmit } from "../components/buttons/button-submit";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { VehicleCard } from "../components/cards/VehicleCard";
 
 export function ValidationMessage({ isValid, message }) {
     if (isValid === null) return null; // não mostra nada se ainda não validado
@@ -34,7 +35,9 @@ export default function PlateSearch() {
             </div>
 
             <div className="mt-6 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">Card Carro</div>
+                <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">
+                    <VehicleCard />
+                </div>
                 <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">Card Óleo</div>
             </div>
         </div>
