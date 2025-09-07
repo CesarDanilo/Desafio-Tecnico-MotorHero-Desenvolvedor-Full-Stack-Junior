@@ -1,7 +1,7 @@
 import React from "react";
 
 export function OilCard() {
-    // Valores estáticos seguindo o modelo da imagem
+    
     const oil = {
         name: "PREMIUM PROTECTION 5W-40",
         type: "Sintético – SN Plus",
@@ -17,20 +17,20 @@ export function OilCard() {
 
     return (
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 max-w-md w-full shadow-md">
-            {/* Imagem */}
+
             <div className="flex justify-center mb-4">
                 <img
                     src={oil.image}
                     alt={oil.name}
                     className="h-16"
                 />
+
+                <div className="flex flex-col justify-center ml-4">
+                    <h2 className="text-lg font-bold">{oil.name}</h2>
+                    <p className="text-gray-400 text-sm mb-4">{oil.type}</p>
+                </div>
             </div>
 
-            {/* Nome e Tipo */}
-            <h2 className="text-lg font-bold">{oil.name}</h2>
-            <p className="text-gray-400 text-sm mb-4">{oil.type}</p>
-
-            {/* Cálculo de frascos */}
             <div className="bg-gray-800 p-3 rounded mb-4">
                 <p className="font-semibold mb-2">📊 CÁLCULO DE FRASCOS:</p>
                 <p>Capacidade Motor: {oil.engineCapacity}L</p>
@@ -41,7 +41,6 @@ export function OilCard() {
                 <p>Sobra: {oil.leftover}ml ({oil.leftoverPercent}%)</p>
             </div>
 
-            {/* Botão */}
             <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded font-semibold">
                 Adicionar ao Orçamento
             </button>
