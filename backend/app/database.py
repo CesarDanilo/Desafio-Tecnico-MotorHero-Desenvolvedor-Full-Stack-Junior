@@ -1,5 +1,11 @@
-import sqlite3
+from sqlmodel import SQLModel, create_engine
 
-def get_connection():
-    conn = sqlite3.connect("motorhero.db")
-    return conn
+# Arquivo SQLite
+sqlite_file_name = "MotorHero.db"
+sqlite_url = f"sqlite:///{sqlite_file_name}"
+
+# Criar engine
+engine = create_engine(sqlite_url, echo=True)
+
+# Cria todas as tabelas definidas nos modelos
+SQLModel.metadata.create_all(engine)
