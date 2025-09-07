@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from datetime import datetime, date
 from sqlmodel import SQLModel, Field, Column, JSON
 from pydantic import BaseModel
@@ -16,7 +16,7 @@ class Consultation(SQLModel, table=True):
     year_model: Optional[int] = None
     engine: Optional[str] = Field(default=None, max_length=20)
     fuel_type: Optional[str] = Field(default=None, max_length=20)
-    oil_capacity: Optional[float] = None 
+    oil_capacity: Optional[float] = None
     oil_code: Optional[str] = Field(default=None, max_length=20)
     oil_name: Optional[str] = Field(default=None, max_length=100)
     bottles_calculated: Optional[int] = None
@@ -61,3 +61,20 @@ class ConsultResponse(BaseModel):
     plate: str
     data: Dict[str, Any]
     enriched_data: Dict[str, Any]
+
+
+class QuoteItemRequest(BaseModel):
+    type: str  # "oil", "service", "part", etc.
+    code: Optional[str] = None
+    description: str
+    quantity: int
+    unit_price: float
+
+
+class QuoteRequest(BaseModel):
+    plate: Optional[str] = None  # placa do veículo
+    customer_name: str
+    customer_phone: Optional[str] = None
+    mechanic_id: str
+    items: List[QuoteItemRequest]
+    discount_percentage: Optional[float] = 0

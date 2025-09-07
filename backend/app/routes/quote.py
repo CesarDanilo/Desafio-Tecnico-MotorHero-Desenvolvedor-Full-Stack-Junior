@@ -1,131 +1,90 @@
-# from fastapi import APIRouter, HTTPException
-# from sqlmodel import Session, select
-# from decimal import Decimal, ROUND_HALF_UP
-# from datetime import date, timedelta
-# from app.models import (
-#     QuoteRequest,
-#     QuoteItemRequest,
-#     Quote,
-#     QuoteItem,
-#     Customer,
-#     VehicleConsultHistory,
-# )
-# from app.database import engine
-# from typing import List, Optional
+from fastapi import APIRouter, HTTPException
+from sqlmodel import Session, select
+from datetime import datetime, date, timedelta
+from decimal import Decimal, ROUND_HALF_UP
+from typing import List
+from app.models import QuoteRequest, QuoteItemRequest, Quote, Consultation
+from app.database import engine
+import random
 
-# router = APIRouter()
+router = APIRouter()
 
 
-# @router.post("/create")
-# def create_quote(quote: QuoteRequest):
-#     with Session(engine) as session:
-#         # Salvar cliente
-#         customer = Customer(name=quote.customer.name, phone=quote.customer.phone)
-#         session.add(customer)
-#         session.commit()
-#         session.refresh(customer)
+@router.post("/create")
+def create_quote(quote_request: QuoteRequest):
+    """
+    Cria um orçamento com base nos itens e veículo informado.
+    """
+    try:
+        # 🔹 Gerar número do orçamento
+        quote_number = (
+            f"Q{datetime.utcnow().strftime('%Y%m%d%H%M%S')}{random.randint(100, 999)}"
+        )
 
-#         # Salvar orçamento
-#         discount_type = quote.discount.type if quote.discount else None
-#         discount_value = quote.discount.value if quote.discount else None
+        # 🔹 Buscar dados do veículo no banco (Consultation)
+        plate = quote_request.plate
+        vehicle_description = None
+        if plate:
+            with Session(engine) as session:
+                statement = select(Consultation).where(
+                    Consultation.plate_normalized == plate
+                )
+                vehicle_data = session.exec(statement).first()
+                if vehicle_data:
+                    vehicle_description = f"{vehicle_data.brand or ''} {vehicle_data.model or ''} {vehicle_data.year_model or ''}".strip()
 
-#         quote_db = Quote(
-#             vehicle_plate=quote.vehicle_plate,
-#             customer_id=customer.id,
-#             discount_type=discount_type,
-#             discount_value=discount_value,
-#         )
-#         session.add(quote_db)
-#         session.commit()
-#         session.refresh(quote_db)
+        # 🔹 Calcular subtotal
+        subtotal = Decimal(0)
+        items_data = []
+        for item in quote_request.items:
+            item_total = Decimal(item.unit_price) * Decimal(item.quantity)
+            subtotal += item_total
+            items_data.append(
+                {
+                    "type": item.type,
+                    "description": item.description,
+                    "code": item.code,
+                    "quantity": item.quantity,
+                    "unit_price": item.unit_price,
+                    "total": float(item_total),
+                }
+            )
 
-#         # Gerar número do orçamento
-#         quote_number = f"ORC-2025-{quote_db.id:05d}"
+        # 🔹 Aplicar desconto
+        discount_percentage = Decimal(quote_request.discount_percentage or 0)
+        discount_amount = (subtotal * discount_percentage / Decimal(100)).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        total = (subtotal - discount_amount).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
 
-#         # Salvar itens e calcular subtotal
-#         subtotal = Decimal("0.00")
-#         items_detail = []
+        # 🔹 Salvar orçamento no banco
+        with Session(engine) as session:
+            quote = Quote(
+                quote_number=quote_number,
+                plate=plate,
+                vehicle_description=vehicle_description,
+                customer_name=quote_request.customer_name,
+                customer_phone=quote_request.customer_phone,
+                items=items_data,
+                subtotal=float(subtotal),
+                discount_percentage=float(discount_percentage),
+                discount_amount=float(discount_amount),
+                total=float(total),
+                mechanic_id=quote_request.mechanic_id,
+                status="active",
+                created_at=datetime.utcnow(),
+                valid_until=date.today()
+                + timedelta(days=7),  # orçamento válido por 7 dias
+            )
+            session.add(quote)
+            session.commit()
+            session.refresh(quote)
 
-#         for idx, item in enumerate(quote.items, start=1):
-#             item_subtotal = Decimal(item.unit_price) * item.quantity
-#             subtotal += item_subtotal
+        return {"success": True, "quote": quote}
 
-#             item_db = QuoteItem(
-#                 type=item.type,
-#                 code=item.code,
-#                 description=item.description,
-#                 quantity=item.quantity,
-#                 unit_price=item.unit_price,
-#                 quote_id=quote_db.id,
-#             )
-#             session.add(item_db)
-
-#             items_detail.append(
-#                 {
-#                     "item": idx,
-#                     "description": item.description,
-#                     "quantity": item.quantity,
-#                     "unit": "UN" if item.type == "oil" else "SV",
-#                     "unit_price": float(
-#                         Decimal(item.unit_price).quantize(
-#                             Decimal("0.01"), rounding=ROUND_HALF_UP
-#                         )
-#                     ),
-#                     "subtotal": float(
-#                         item_subtotal.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-#                     ),
-#                 }
-#             )
-
-#         session.commit()
-
-#         # Totais
-#         discount_percentage = (
-#             quote.discount.value
-#             if quote.discount and quote.discount.type == "percentage"
-#             else 0
-#         )
-#         discount_amount = (subtotal * Decimal(discount_percentage) / 100).quantize(
-#             Decimal("0.01"), rounding=ROUND_HALF_UP
-#         )
-#         final_total = (subtotal - discount_amount).quantize(
-#             Decimal("0.01"), rounding=ROUND_HALF_UP
-#         )
-
-#         # Buscar descrição do veículo
-#         vehicle_desc = None
-#         history = session.exec(
-#             select(VehicleConsultHistory).where(
-#                 VehicleConsultHistory.plate == quote.vehicle_plate
-#             )
-#         ).first()
-#         if history:
-#             vehicle_desc = history.get_vehicle_data().get("description")
-
-#         # Datas
-#         today = date.today()
-#         valid_until = today + timedelta(days=7)
-
-#         # WhatsApp link
-#         whatsapp_link = (
-#             f"https://wa.me/55{quote.customer.phone}?text=Orcamento%20{quote_number}"
-#         )
-
-#         return {
-#             "quote": {
-#                 "number": quote_number,
-#                 "date": today.isoformat(),
-#                 "valid_until": valid_until.isoformat(),
-#                 "status": "active",
-#             },
-#             "vehicle": {"plate": quote.vehicle_plate, "description": vehicle_desc},
-#             "customer": {"name": quote.customer.name, "phone": quote.customer.phone},
-#             "items_detail": items_detail,
-#             "totals": {
-#                 "subtotal": float(subtotal),
-#                 "discount_percentage": discount_percentage,
-#                 "discount_amount": float(discount_amount),
-#                 "final_total": float(final_total),
-#             },
-#             "share": {"whatsapp_link": whatsapp_link},
-#         }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erro ao criar orçamento: {str(e)}"
+        )
