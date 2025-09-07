@@ -1,7 +1,7 @@
 import React from "react";
 
 export function OilCard() {
-    
+
     const oil = {
         name: "PREMIUM PROTECTION 5W-40",
         type: "Sintético – SN Plus",
