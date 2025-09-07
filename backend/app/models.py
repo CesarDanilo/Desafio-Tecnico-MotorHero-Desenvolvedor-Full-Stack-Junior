@@ -1,27 +1,56 @@
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List, Dict, Any
-from enum import Enum
+from typing import Optional, Dict, Any
+from datetime import datetime, date
+from sqlmodel import SQLModel, Field, Column, JSON
 from pydantic import BaseModel
-import json
 
 
-# -----------------------
-# Enums
-# -----------------------
-class ItemType(str, Enum):
-    oil = "oil"
-    service = "service"
-    part = "part"
+class Consultation(SQLModel, table=True):
+    __tablename__ = "consultations"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    plate: str = Field(max_length=10, nullable=False)
+    plate_normalized: str = Field(max_length=10, nullable=False, index=True)
+    brand: Optional[str] = Field(default=None, max_length=50)
+    model: Optional[str] = Field(default=None, max_length=100)
+    year_manufacture: Optional[int] = None
+    year_model: Optional[int] = None
+    engine: Optional[str] = Field(default=None, max_length=20)
+    fuel_type: Optional[str] = Field(default=None, max_length=20)
+    oil_capacity: Optional[float] = None 
+    oil_code: Optional[str] = Field(default=None, max_length=20)
+    oil_name: Optional[str] = Field(default=None, max_length=100)
+    bottles_calculated: Optional[int] = None
+    bottle_size_ml: Optional[int] = None
+    excess_ml: Optional[int] = None
+    city: Optional[str] = Field(default=None, max_length=100)
+    state: Optional[str] = Field(default=None, max_length=2)
+    has_restrictions: Optional[bool] = None
+    restrictions: Optional[str] = None
+    mechanic_id: Optional[str] = Field(default=None, max_length=50, index=True)
+    cached: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, index=True)
 
 
-class DiscountType(str, Enum):
-    percentage = "percentage"
-    fixed = "fixed"
+class Quote(SQLModel, table=True):
+    __tablename__ = "quotes"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    quote_number: str = Field(max_length=20, nullable=False, unique=True, index=True)
+    plate: Optional[str] = Field(default=None, max_length=10)
+    vehicle_description: Optional[str] = Field(default=None, max_length=200)
+    customer_name: Optional[str] = Field(default=None, max_length=100)
+    customer_phone: Optional[str] = Field(default=None, max_length=20)
+    items: Optional[dict] = Field(default=None, sa_column=Column(JSON))
+    subtotal: Optional[float] = None
+    discount_percentage: Optional[float] = None
+    discount_amount: Optional[float] = None
+    total: Optional[float] = None
+    mechanic_id: Optional[str] = Field(default=None, max_length=50)
+    status: str = Field(default="active", max_length=20, index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    valid_until: Optional[date] = None
 
 
-# -----------------------
-# Pydantic Models
-# -----------------------
 class VehicleConsultRequest(BaseModel):
     plate: str
     mechanic_id: str
@@ -32,79 +61,3 @@ class ConsultResponse(BaseModel):
     plate: str
     data: Dict[str, Any]
     enriched_data: Dict[str, Any]
-
-
-class CustomerRequest(BaseModel):
-    name: str
-    phone: str
-
-
-class QuoteItemRequest(BaseModel):
-    type: ItemType
-    code: Optional[str] = None
-    description: str
-    quantity: int
-    unit_price: float
-
-
-class DiscountRequest(BaseModel):
-    type: DiscountType
-    value: float
-
-
-class QuoteRequest(BaseModel):
-    vehicle_plate: str
-    vehicle_description: Optional[str] = None
-    customer: CustomerRequest
-    items: List[QuoteItemRequest]
-    discount: Optional[DiscountRequest] = None
-
-
-# -----------------------
-# SQLModel Models
-# -----------------------
-class Customer(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    phone: str
-    quotes: List["Quote"] = Relationship(back_populates="customer")
-
-
-class Quote(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    vehicle_plate: str
-    customer_id: Optional[int] = Field(default=None, foreign_key="customer.id")
-    discount_type: Optional[DiscountType] = None
-    discount_value: Optional[float] = None
-    customer: Optional[Customer] = Relationship(back_populates="quotes")
-    items: List["QuoteItem"] = Relationship(back_populates="quote")
-
-
-class QuoteItem(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    type: ItemType
-    code: Optional[str] = None
-    description: str
-    quantity: int
-    unit_price: float
-    quote_id: Optional[int] = Field(default=None, foreign_key="quote.id")
-    quote: Optional[Quote] = Relationship(back_populates="items")
-
-
-class VehicleConsultHistory(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    plate: str
-    vehicle_data_json: str
-    enriched_data_json: str
-
-    def set_vehicle_data(self, data: Dict[str, Any]):
-        self.vehicle_data_json = json.dumps(data)
-
-    def get_vehicle_data(self) -> Dict[str, Any]:
-        return json.loads(self.vehicle_data_json)
-
-    def set_enriched_data(self, data: Dict[str, Any]):
-        self.enriched_data_json = json.dumps(data)
-
-    def get_enriched_data(self) -> Dict[str, Any]:
-        return json.loads(self.enriched_data_json)
