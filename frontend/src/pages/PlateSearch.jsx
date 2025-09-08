@@ -9,14 +9,16 @@ import { ValidationMessage } from "../components/validation-message/Validation-m
 export default function PlateSearch() {
     const [plate, setPlate] = useState("")
     const [isValid, setIsValid] = useState(null)
-    const [vehicleData, setVehicleData] = useState(null) // guarda dados do veículo
+    const [vehicleData, setVehicleData] = useState(null)
+    const [oilData, setOilData] = useState(null)
 
     async function handleSubmit(e) {
         e.preventDefault()
         try {
             const data = await fetchVehicle(plate)
             console.log("Dados recebidos:", data)
-            setVehicleData(data) // salva dados para enviar ao card
+            setVehicleData(data)
+            setOilData(data)
             setIsValid(true)
         } catch (error) {
             setIsValid(false)
@@ -44,7 +46,7 @@ export default function PlateSearch() {
                     <p className="text-gray-400">Nenhum veículo consultado ainda.</p>
                 )}
                 <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">
-                    <OilCard />
+                    <OilCard oilData={oilData} />
                 </div>
             </div>
         </div>
