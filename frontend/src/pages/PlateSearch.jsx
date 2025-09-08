@@ -1,10 +1,10 @@
 import { InputPlateSearch } from "../components/Input/Input-PlateSearch"
 import { ButtonSubmit } from "../components/buttons/button-submit"
-import { CheckCircle2, XCircle } from "lucide-react"
 import { VehicleCard } from "../components/cards/VehicleCard"
 import { OilCard } from "../components/cards/OilCard"
 import { useState } from "react"
 import { fetchVehicle } from "../functions/fetchVehicleData"
+import { ValidationMessage } from "../components/validation-message/Validation-message"
 
 export default function PlateSearch() {
     const [plate, setPlate] = useState("")
@@ -21,24 +21,6 @@ export default function PlateSearch() {
         } catch (error) {
             setIsValid(false)
         }
-    }
-
-    function ValidationMessage({ isValid, message }) {
-        if (isValid === null) return null
-
-        return (
-            <div
-                className={`flex items-center gap-2 mt-2 text-sm font-medium transition-all duration-200
-        ${isValid ? "text-green-500" : "text-red-500"}`}
-            >
-                {isValid ? (
-                    <CheckCircle2 className="w-5 h-5" />
-                ) : (
-                    <XCircle className="w-5 h-5" />
-                )}
-                <span>{message || (isValid ? "Formato válido" : "Formato inválido")}</span>
-            </div>
-        )
     }
 
     return (
