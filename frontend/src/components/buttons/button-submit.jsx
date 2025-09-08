@@ -1,8 +1,7 @@
-export function ButtonSubmit({ label, handleSubmit }) {
+export function ButtonSubmit({ label }) {
     return (
         <button
             type="submit"
-            onClick={handleSubmit}
             className="w-full sm:w-auto px-6 py-2 rounded-lg 
                  bg-[#FF6B00] text-white font-medium 
                  hover:bg-[#e65f00] active:scale-95 
