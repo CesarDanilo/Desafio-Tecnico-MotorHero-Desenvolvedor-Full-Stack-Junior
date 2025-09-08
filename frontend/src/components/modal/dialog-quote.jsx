@@ -1,8 +1,6 @@
 import { useState } from "react"
 
-export function ModalQuote({ isOpen, handleCloseDialog, vehicleData }) {
-    if (!isOpen) return null
-
+export function ModalQuote({ handleCloseDialog, vehicleData }) {
     const plate = vehicleData.data.data.vehicle.identification.plate
     const oilname = vehicleData.data.data.oil_recommendation.product.name
     const amount = vehicleData.data.data.oil_recommendation.calculation.bottles_needed
