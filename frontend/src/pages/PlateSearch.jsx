@@ -38,7 +38,7 @@ export default function PlateSearch() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-950 text-white">
-            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} />}
+            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} vehicleData={vehicleData} oilData={oilData}/>}
             <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
                 <InputPlateSearch setPlate={setPlate} />
                 <ButtonSubmit label="Consultar" />
