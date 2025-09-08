@@ -1,3 +1,5 @@
+import { motion } from "framer-motion"
+
 export function VehicleCard({ vehicle }) {
     if (!vehicle) {
         return (
@@ -8,6 +10,15 @@ export function VehicleCard({ vehicle }) {
     }
 
     const v = vehicle.data.data.vehicle
+
+    // passos que serão animados
+    const details = [
+        `Ano: ${v.technical.year_manufacture}/${v.technical.year_model}`,
+        `Motor: ${v.technical.engine} ${v.technical.fuel}`,
+        `Capacidade: ${v.technical.oil_capacity_liters} litros`,
+        `Cidade: ${v.location.city}/${v.location.state}`
+    ]
+
     return (
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 max-w-md w-full shadow-md">
             {/* Título com logo */}
@@ -27,29 +38,28 @@ export function VehicleCard({ vehicle }) {
                 </h2>
             </div>
 
-            {/* Detalhes técnicos */}
+            {/* Detalhes técnicos animados */}
             <div className="text-gray-300 text-sm space-y-1 mb-3">
-                <p>
-                    <span className="font-medium text-white">Ano:</span>{" "}
-                    {v.technical.year_manufacture}/{v.technical.year_model}
-                </p>
-                <p>
-                    <span className="font-medium text-white">Motor:</span>{" "}
-                    {v.technical.engine} {v.technical.fuel}
-                </p>
-                <p>
-                    <span className="font-medium text-white">Capacidade:</span>{" "}
-                    {v.technical.oil_capacity_liters} litros
-                </p>
-                <p>
-                    <span className="font-medium text-white">Cidade:</span>{" "}
-                    {v.location.city}/{v.location.state}
-                </p>
+                {details.map((detail, index) => (
+                    <motion.p
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.3, duration: 0.5 }}
+                    >
+                        {detail}
+                    </motion.p>
+                ))}
             </div>
 
-            {/* Restrições legais */}
+            {/* Restrições legais animadas */}
             {v.legal.has_restrictions && v.legal.restrictions.length > 0 && (
-                <div className="text-orange-500 font-semibold mb-3 flex items-center gap-1">
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: details.length * 0.3 }}
+                    className="text-orange-500 font-semibold mb-3 flex items-center gap-1"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -65,9 +75,8 @@ export function VehicleCard({ vehicle }) {
                         />
                     </svg>
                     {v.legal.restrictions.join(", ")}
-                </div>
+                </motion.div>
             )}
-
         </div>
     )
 }
