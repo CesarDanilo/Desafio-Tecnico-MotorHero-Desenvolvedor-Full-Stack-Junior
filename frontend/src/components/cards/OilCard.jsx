@@ -37,7 +37,6 @@ export function OilCard({ oilData }) {
                 </div>
             </div>
 
-            {/* Cálculo de frascos */}
             {calc && (
                 <div className="bg-gray-800 p-3 rounded mb-4 text-gray-300 text-sm">
                     <p className="font-semibold mb-2">📊 CÁLCULO DE FRASCOS:</p>
@@ -50,7 +49,6 @@ export function OilCard({ oilData }) {
                 </div>
             )}
 
-            {/* Valores financeiros */}
             <div className="bg-gray-800 p-3 rounded mb-4 text-gray-300 text-sm">
                 <ul>
                     <li>💰 <strong>VALORES:</strong></li>
