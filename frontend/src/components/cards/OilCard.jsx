@@ -1,7 +1,7 @@
 import React from "react"
 import { motion } from "framer-motion"
 
-export function OilCard({ oilData }) {
+export function OilCard({ oilData, handleOpenDialog }) {
     const oilFromProps = oilData?.data?.data?.oil_recommendation
     const calc = oilFromProps?.calculation
 
@@ -88,7 +88,7 @@ export function OilCard({ oilData }) {
                 </ul>
             </div>
 
-            <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded font-semibold">
+            <button onClick={handleOpenDialog} className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded font-semibold">
                 Adicionar ao Orçamento
             </button>
         </div>

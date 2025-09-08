@@ -6,12 +6,14 @@ import { useState } from "react"
 import { fetchVehicle } from "../functions/fetchVehicleData"
 import { ValidationMessage } from "../components/validation-message/Validation-message"
 import { motion } from "framer-motion"
+import { ModalQuote } from "../components/modal/dialog-quote"
 
 export default function PlateSearch() {
     const [plate, setPlate] = useState("")
     const [isValid, setIsValid] = useState(null)
     const [vehicleData, setVehicleData] = useState(null)
     const [oilData, setOilData] = useState(null)
+    const [open, setOpen] = useState(false)
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -26,9 +28,17 @@ export default function PlateSearch() {
         }
     }
 
+    function handleOpenDialog(open) {
+        setOpen(true)
+    }
+
+    function handleCloseDialog(close) {
+        setOpen(false)
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-950 text-white">
-
+            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} />}
             <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
                 <InputPlateSearch setPlate={setPlate} />
                 <ButtonSubmit label="Consultar" />
@@ -58,7 +68,7 @@ export default function PlateSearch() {
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className="bg-gray-900 rounded-lg p-4 border border-gray-800"
                 >
-                    <OilCard oilData={oilData} />
+                    <OilCard oilData={oilData} handleOpenDialog={handleOpenDialog} />
                 </motion.div>
             </div>
         </div>
