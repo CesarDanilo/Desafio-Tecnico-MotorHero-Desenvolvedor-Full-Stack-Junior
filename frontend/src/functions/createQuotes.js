@@ -1,8 +1,8 @@
 import axios from "axios"
 
 export async function createQuotes({ data }) {
-    const url = "http://127.0.0.1:8000/api/quote/create"
-
+    const url = import.meta.env.VITE_API_URL
+    
     const quoteData = {
         vehicle_description: data.vehicle_description,
         plate: data.plate,
