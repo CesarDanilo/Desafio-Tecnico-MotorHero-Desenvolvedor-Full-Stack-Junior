@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function fetchVehicle(plate) {
-    const url = import.meta.env.VITE_API_URL
+    const url = import.meta.env.VITE_RENDER_API_URL
     console.log("URL:", url)
     const payload = {
         plate,

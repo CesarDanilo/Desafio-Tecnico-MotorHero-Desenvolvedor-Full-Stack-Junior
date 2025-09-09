@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export async function createQuotes({ data }) {
-    const url = import.meta.env.VITE_API_URL
+    const url = import.meta.env.VITE_RENDER_API_URL
 
     const quoteData = {
         vehicle_description: data.vehicle_description,
