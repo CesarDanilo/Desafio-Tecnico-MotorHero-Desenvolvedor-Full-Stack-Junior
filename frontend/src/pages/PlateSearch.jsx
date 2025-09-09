@@ -8,6 +8,7 @@ import { ValidationMessage } from "../components/validation-message/Validation-m
 import { motion } from "framer-motion";
 import { ModalQuote } from "../components/modal/dialog-quote";
 import { CardsConsultas } from "../components/dashboard-cards/cards-consultas";
+import { queryCounter } from "../functions/queryCounter";
 
 export default function PlateSearch() {
     const [plate, setPlate] = useState("");
@@ -40,6 +41,7 @@ export default function PlateSearch() {
                 return;
             }
 
+            queryCounter()
             setVehicleData(data);
             setOilData(data);
             setIsValid(true);
