@@ -1,45 +1,72 @@
-import { InputPlateSearch } from "../components/Input/Input-PlateSearch"
-import { ButtonSubmit } from "../components/buttons/button-submit"
-import { VehicleCard } from "../components/cards/VehicleCard"
-import { OilCard } from "../components/cards/OilCard"
-import { useState } from "react"
-import { fetchVehicle } from "../functions/fetchVehicleData"
-import { ValidationMessage } from "../components/validation-message/Validation-message"
-import { motion } from "framer-motion"
-import { ModalQuote } from "../components/modal/dialog-quote"
-import { CardsConsultas } from "../components/dashboard-cards/cards-consultas"
+import { InputPlateSearch } from "../components/Input/Input-PlateSearch";
+import { ButtonSubmit } from "../components/buttons/button-submit";
+import { VehicleCard } from "../components/cards/VehicleCard";
+import { OilCard } from "../components/cards/OilCard";
+import { useState } from "react";
+import { fetchVehicle } from "../functions/fetchVehicleData";
+import { ValidationMessage } from "../components/validation-message/Validation-message";
+import { motion } from "framer-motion";
+import { ModalQuote } from "../components/modal/dialog-quote";
+import { CardsConsultas } from "../components/dashboard-cards/cards-consultas";
 
 export default function PlateSearch() {
-    const [plate, setPlate] = useState("")
-    const [isValid, setIsValid] = useState(null)
-    const [vehicleData, setVehicleData] = useState(null)
-    const [oilData, setOilData] = useState(null)
-    const [open, setOpen] = useState(false)
+    const [plate, setPlate] = useState("");
+    const [isValid, setIsValid] = useState(null);
+    const [vehicleData, setVehicleData] = useState(null);
+    const [oilData, setOilData] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [toast, setToast] = useState(null); 
+
+    function showToast(message) {
+        setToast({ message });
+        setTimeout(() => {
+            setToast(null);
+        }, 4000); 
+    }
 
     async function handleSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            const data = await fetchVehicle(plate)
-            console.log("Dados recebidos:", data)
-            setVehicleData(data)
-            setOilData(data)
-            setIsValid(true)
+            const { data, error } = await fetchVehicle(plate);
+
+            if (data == null) {
+                setIsValid(false);
+                if (error) showToast(error);
+                return;
+            }
+
+            if (error) {
+                showToast(error);
+                return;
+            }
+
+            setVehicleData(data);
+            setOilData(data);
+            setIsValid(true);
         } catch (error) {
-            setIsValid(false)
+            setIsValid(false);
+            showToast("Ocorreu um erro inesperado.");
         }
     }
 
-    function handleOpenDialog(open) {
-        setOpen(true)
+    function handleOpenDialog() {
+        setOpen(true);
     }
 
-    function handleCloseDialog(close) {
-        setOpen(false)
+    function handleCloseDialog() {
+        setOpen(false);
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-950 text-white">
-            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} vehicleData={vehicleData} oilData={oilData} />}
+        <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-950 text-white relative">
+            {open && (
+                <ModalQuote
+                    isOpen={open}
+                    handleCloseDialog={handleCloseDialog}
+                    vehicleData={vehicleData}
+                    oilData={oilData}
+                />
+            )}
             <CardsConsultas />
             <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
                 <InputPlateSearch setPlate={setPlate} />
@@ -73,6 +100,12 @@ export default function PlateSearch() {
                     <OilCard oilData={oilData} handleOpenDialog={handleOpenDialog} />
                 </motion.div>
             </div>
+
+            {toast && (
+                <div className="fixed bottom-5 right-5 bg-red-600 text-white px-4 py-2 rounded shadow-lg animate-slideIn">
+                    {toast.message}
+                </div>
+            )}
         </div>
-    )
+    );
 }
