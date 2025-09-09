@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { createQuotes } from "../../functions/createQuotes"
 
 export function ModalQuote({ handleCloseDialog, vehicleData }) {
     const plate = vehicleData.data.data.vehicle.identification.plate
@@ -8,10 +9,40 @@ export function ModalQuote({ handleCloseDialog, vehicleData }) {
     const [checked, setChecked] = useState(true)
     const [discount, setDiscount] = useState(5)
 
+    const [customer_name, setCustomer_name] = useState("")
+    const [customer_phone, setCustomer_phone] = useState("")
+
     const unitPrice = 52.9
     const subtotal = checked ? amount * unitPrice : 0
 
     const total = subtotal - (subtotal * discount) / 100
+
+    const type = vehicleData.data.data.oil_recommendation.product.type
+    const code = vehicleData.data.data.oil_recommendation.product.code
+    const specification = vehicleData.data.data.oil_recommendation.product.specification
+
+    async function generateQuoteNow() {
+
+        const data = {
+            plate: plate,
+            customer_name: customer_name,
+            customer_phone: customer_phone,
+            mechanic_id: "1",
+            items: [
+                {
+                    type: type,
+                    code: code,
+                    description: specification,
+                    quantity: amount,
+                    unit_price: unitPrice,
+                },
+            ],
+            discount_percentage: discount,
+        }
+        console.log(data)
+        console.log(await createQuotes({ data }))
+        handleCloseDialog();
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
@@ -25,11 +56,13 @@ export function ModalQuote({ handleCloseDialog, vehicleData }) {
                     <input
                         type="text"
                         placeholder="Cliente"
+                        onChange={(e) => { setCustomer_name(e.target.value) }}
                         className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                     <input
                         type="tel"
                         placeholder="Telefone"
+                        onChange={(e) => { setCustomer_phone(e.target.value) }}
                         className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                 </div>
@@ -75,7 +108,7 @@ export function ModalQuote({ handleCloseDialog, vehicleData }) {
                     >
                         Cancelar
                     </button>
-                    <button className="px-4 py-2 rounded-lg bg-green-500/80 hover:bg-green-500 transition">
+                    <button onClick={generateQuoteNow} className="px-4 py-2 rounded-lg bg-green-500/80 hover:bg-green-500 transition">
                         Gerar Orçamento
                     </button>
                 </div>
