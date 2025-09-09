@@ -4,6 +4,7 @@ export async function createQuotes({ data }) {
     const url = "http://127.0.0.1:8000/api/quote/create"
 
     const quoteData = {
+        vehicle_description: data.vehicle_description,
         plate: data.plate,
         customer_name: data.customer_name,
         customer_phone: data.customer_phone,

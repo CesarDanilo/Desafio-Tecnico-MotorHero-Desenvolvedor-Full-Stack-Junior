@@ -19,11 +19,14 @@ export function ModalQuote({ handleCloseDialog, vehicleData }) {
 
     const type = vehicleData.data.data.oil_recommendation.product.type
     const code = vehicleData.data.data.oil_recommendation.product.code
+    const vehicleDescription = vehicleData.data.data.vehicle.identification.pretty_name
+    console.log(vehicleData.data.data)
     const specification = vehicleData.data.data.oil_recommendation.product.specification
 
     async function generateQuoteNow() {
 
         const data = {
+            vehicle_description: vehicleDescription,
             plate: plate,
             customer_name: customer_name,
             customer_phone: customer_phone,
