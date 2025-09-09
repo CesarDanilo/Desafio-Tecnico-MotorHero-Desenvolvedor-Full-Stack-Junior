@@ -82,14 +82,16 @@ git clone https://github.com/CesarDanilo/motorhero-challenge.git
 
 ### Backend
 ```bash
-cd backend
+cd motorhero-challenge\backend
+python -m venv venv
+venv\Scripts\activate 
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
 ### Frontend
 ```bash
-cd frontend
+cd motorhero-challenge\frontend
 npm install
 npm run dev
 ```
