@@ -82,7 +82,7 @@ git clone https://github.com/CesarDanilo/motorhero-challenge.git
 
 ### Backend
 ```bash
-cd backend
+cd motorhero-challenge\backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
