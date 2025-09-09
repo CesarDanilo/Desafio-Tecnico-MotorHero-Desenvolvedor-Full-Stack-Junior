@@ -75,6 +75,11 @@ Normalização remove caracteres especiais e valida:
 
 ## Como Rodar
 
+### Git Clone
+```bash
+git clone https://github.com/CesarDanilo/motorhero-challenge.git
+```
+
 ### Backend
 ```bash
 cd backend
