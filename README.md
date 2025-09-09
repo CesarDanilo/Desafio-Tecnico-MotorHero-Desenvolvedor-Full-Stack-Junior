@@ -84,6 +84,7 @@ git clone https://github.com/CesarDanilo/motorhero-challenge.git
 ```bash
 cd motorhero-challenge\backend
 python -m venv venv
+venv\Scripts\activate 
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
