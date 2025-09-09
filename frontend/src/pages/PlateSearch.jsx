@@ -7,6 +7,7 @@ import { fetchVehicle } from "../functions/fetchVehicleData"
 import { ValidationMessage } from "../components/validation-message/Validation-message"
 import { motion } from "framer-motion"
 import { ModalQuote } from "../components/modal/dialog-quote"
+import { CardsConsultas } from "../components/dashboard-cards/cards-consultas"
 
 export default function PlateSearch() {
     const [plate, setPlate] = useState("")
@@ -38,7 +39,8 @@ export default function PlateSearch() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-950 text-white">
-            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} vehicleData={vehicleData} oilData={oilData}/>}
+            {open && <ModalQuote isOpen={open} handleCloseDialog={handleCloseDialog} vehicleData={vehicleData} oilData={oilData} />}
+            <CardsConsultas />
             <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
                 <InputPlateSearch setPlate={setPlate} />
                 <ButtonSubmit label="Consultar" />
