@@ -101,7 +101,7 @@ npm run dev
 ### Usando Docker
 
 Se você quiser rodar via Docker, siga os passos:
-
+(AINDA NÃO FINALIZADO A BRANCH VERSION-DOCKER)
 1. Build da imagem
 ```bash
 docker build -t motorhero-backend ./backend
