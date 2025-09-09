@@ -91,7 +91,7 @@ uvicorn app.main:app --reload
 
 ### Frontend
 ```bash
-cd frontend
+cd motorhero-challenge\frontend
 npm install
 npm run dev
 ```
