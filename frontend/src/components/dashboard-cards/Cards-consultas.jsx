@@ -1,8 +1,8 @@
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 export function CardsConsultas() {
     return (
-        <div className="flex mb-8 gap-4">
+        <div className="flex flex-wrap gap-4 mb-8 justify-center sm:justify-start">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -14,6 +14,7 @@ export function CardsConsultas() {
                     <p className="text-sm text-gray-500">consultas</p>
                 </div>
             </motion.div>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -25,6 +26,7 @@ export function CardsConsultas() {
                     <p className="text-sm text-gray-500">consultas</p>
                 </div>
             </motion.div>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -36,6 +38,7 @@ export function CardsConsultas() {
                     <p className="text-sm text-gray-500">34%</p>
                 </div>
             </motion.div>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -48,5 +51,5 @@ export function CardsConsultas() {
                 </div>
             </motion.div>
         </div>
-    )
+    );
 }
