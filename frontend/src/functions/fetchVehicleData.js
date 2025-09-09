@@ -2,6 +2,7 @@ import axios from "axios";
 
 export async function fetchVehicle(plate) {
     const url = import.meta.env.VITE_API_URL
+    console.log("URL:", url)
     const payload = {
         plate,
         mechanic_id: "mech_001"
@@ -9,7 +10,7 @@ export async function fetchVehicle(plate) {
 
     try {
         const response = await axios.post(
-            url + "/api/vehicle/consult",
+            `${url}/api/vehicle/consult`,
             payload
         );
         return { data: response.data, error: null };

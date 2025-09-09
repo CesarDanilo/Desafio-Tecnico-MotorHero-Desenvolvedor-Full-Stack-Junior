@@ -22,7 +22,7 @@ export async function createQuotes({ data }) {
     }
 
     try {
-        const response = await axios.post(url+"/api/quote/create", quoteData, {
+        const response = await axios.post(`${url}/api/quote/create`, quoteData, {
             headers: {
                 "Content-Type": "application/json",
             },
