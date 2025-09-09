@@ -24,6 +24,42 @@ O sistema calcula automaticamente a quantidade de frascos necessária, exibe inf
 
 ---
 
+## Decisões Técnicas
+
+### Cálculo de Frascos
+Implementei o cálculo seguindo a lógica:
+1. Conversão de litros para ML (4.0L → 4000ml)
+2. Extração do tamanho do frasco do retorno da API
+3. Divisão com arredondamento para cima (ceil)
+4. Cálculo de sobra em ML e percentual
+
+### Cache
+Implementei cache em memória com TTL de 2 horas para:
+- Economizar chamadas à API
+- Melhorar tempo de resposta
+- Reduzir custos
+
+### Tratamento de Placas
+Normalização remove caracteres especiais e valida:
+- Formato antigo: ABC1234
+- Formato Mercosul: ABC1D23
+
+## Screenshots
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5c6d2610-4daa-412c-9c73-cb74a5f7f65f" width="500" />
+  <img src="https://github.com/user-attachments/assets/e9ef6b2e-64a8-4748-b329-177841a05e70" width="500" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/11e9bf98-3272-43d6-a9a7-b3fe2aa5ae64" width="250" />
+  <img src="https://github.com/user-attachments/assets/4eb0b501-1348-4039-92b0-d87c06e9a359" width="250" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/12ed9823-ebf9-48b5-ab51-8e97c2cd24dc" width="500" />
+  </p>
+
+
 ## Funcionalidades
 - ✅ Consulta de veículo por placa com **normalização e validação**
 - ✅ Integração com API externa de óleo
@@ -38,14 +74,34 @@ O sistema calcula automaticamente a quantidade de frascos necessária, exibe inf
 ---
 
 ## Como Rodar
-### BACKEND
-- cd backend
-- pip install -r requirements.txt
-- uvicorn app.main:app --reload
 
-### FRONTEND
-- cd frontend
-- npm install
-- npm run dev
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Usando Docker
+
+Se você quiser rodar via Docker, siga os passos:
+
+1. Build da imagem
+```bash
+docker build -t motorhero-backend ./backend
+docker build -t motorhero-frontend ./frontend
+```
+
+2. Rodar o container
+```bash
+docker run -p 8000:8000 motorhero-backend
+docker run -p 5173:5173 motorhero-frontend
+```
 
