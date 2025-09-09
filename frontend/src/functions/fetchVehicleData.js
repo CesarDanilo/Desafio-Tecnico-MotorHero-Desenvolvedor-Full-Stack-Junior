@@ -9,7 +9,7 @@ export async function fetchVehicle(plate) {
 
     try {
         const response = await axios.post(
-            url,
+            url + "/api/vehicle/consult",
             payload
         );
         return { data: response.data, error: null };

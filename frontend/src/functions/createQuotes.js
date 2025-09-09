@@ -2,7 +2,7 @@ import axios from "axios"
 
 export async function createQuotes({ data }) {
     const url = import.meta.env.VITE_API_URL
-    
+
     const quoteData = {
         vehicle_description: data.vehicle_description,
         plate: data.plate,
@@ -22,7 +22,7 @@ export async function createQuotes({ data }) {
     }
 
     try {
-        const response = await axios.post(url, quoteData, {
+        const response = await axios.post(url+"/api/quote/create", quoteData, {
             headers: {
                 "Content-Type": "application/json",
             },
