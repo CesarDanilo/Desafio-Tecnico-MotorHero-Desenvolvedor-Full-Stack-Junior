@@ -38,9 +38,14 @@ O sistema calcula automaticamente a quantidade de frascos necessária, exibe inf
 ---
 
 ## Como Rodar
+### BACKEND
+- cd backend
+- pip install -r requirements.txt
+- uvicorn app.main:app --reload
 
-### Usando Docker
-Caso tenha implementado Docker:
+### FRONTEND
+- cd frontend
+- npm install
+- npm run dev
 
-```bash
-docker-compose up
+
