@@ -7,7 +7,7 @@ import { fetchVehicle } from "../functions/fetchVehicleData";
 import { ValidationMessage } from "../components/validation-message/Validation-message";
 import { motion } from "framer-motion";
 import { ModalQuote } from "../components/modal/dialog-quote";
-import { CardsConsultas } from "../components/dashboard-cards/cards-consultas";
+import { CardsConsultas } from "../components/dashboard-cards/CardsConsultas";
 import { queryCounter } from "../functions/queryCounter";
 
 export default function PlateSearch() {
